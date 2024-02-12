@@ -1,17 +1,24 @@
-import { notesMock } from '@renderer/store/mocks'
 import NotePreview from './NotePreview'
+import { useNotesList } from '@renderer/hooks/useNotesList'
 
-const NotesList = (): React.ReactNode => {
-  if (notesMock.length === 0)
+const NotesList = ({ onSelect }: { onSelect: () => void }): React.ReactNode => {
+  const { notes, selectedNoteIndex, handleNoteSelect } = useNotesList({ onSelect })
+  if (notes.length === 0)
     return (
-      <ul className='text-center mt-3'>
+      <ul className="text-center mt-3">
         <span>No notes yet</span>
       </ul>
     )
   return (
     <ul className="mt-3 space-y-1">
-      {notesMock.map((note) => (
-        <NotePreview key={note.title} title={note.title} lastEditTime={note.lastEditTime} />
+      {notes.map((note, index) => (
+        <NotePreview
+          key={note.title}
+          title={note.title}
+          isActive={selectedNoteIndex === index}
+          lastEditTime={note.lastEditTime}
+          onClick={() => handleNoteSelect(index)}
+        />
       ))}
     </ul>
   )
